@@ -1,4 +1,4 @@
-﻿namespace Domain.logic
+﻿namespace Domain.Logic
 {
     public class Result
     {
@@ -14,7 +14,7 @@
 
         public bool Success { get; }
         public string Error { get; }
-        public bool Failure => !Success;
+        public bool isFailure => !Success;
 
         public static Result Fail(string message)
         {
@@ -23,7 +23,7 @@
 
         public static Result<T> Fail<T>(string message)
         {
-            return new Result<T>(default, false, message);
+            return new Result<T>(default!, false, message);
         }
 
         public static Result Ok()
@@ -34,6 +34,11 @@
         public static Result<T> Ok<T>(T value)
         {
             return new Result<T>(value, true, string.Empty);
+        }
+
+        public static bool operator &(Result result1, Result result2)
+        {
+            return result1.Success && result2.Success;
         }
     }
 
