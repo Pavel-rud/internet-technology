@@ -43,8 +43,13 @@ namespace Database.Repository
             context.SaveChangesAsync();
         }
 
-        public Schedule Update(Schedule item) {
-            return context.Schedules.Update(item.ToModel()).Entity.ToDomain();
+        public Schedule? Update(Schedule item) {
+            try {
+                return context.Schedules.Update(item.ToModel()).Entity.ToDomain();
+            }
+            catch {
+                return null;
+            }
         }
     }
 }

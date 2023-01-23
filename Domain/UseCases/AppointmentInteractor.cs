@@ -2,13 +2,13 @@
 using Domain.Logic;
 using Domain.Models;
 
-namespace domain.UseCases
+namespace Domain.UseCases
 {
-    public class AppointmentService
+    public class AppointmentInteractor
     {
         private readonly IAppointmentRepository _db;
 
-        public AppointmentService(IAppointmentRepository db)
+        public AppointmentInteractor(IAppointmentRepository db)
         {
             _db = db;
         }

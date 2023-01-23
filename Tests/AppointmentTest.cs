@@ -6,13 +6,13 @@ namespace Tests
 {
     public class AppointmentTest
     {
-        private readonly AppointmentService _service;
+        private readonly AppointmentInteractor _service;
         private readonly Mock<IAppointmentRepository> _mock;
 
         public AppointmentTest()
         {
             _mock = new Mock<IAppointmentRepository>();
-            _service = new AppointmentService(_mock.Object);
+            _service = new AppointmentInteractor(_mock.Object);
         }
 
         [Fact]
