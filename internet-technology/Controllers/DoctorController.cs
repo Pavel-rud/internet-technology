@@ -3,6 +3,7 @@ using Domain.UseCases;
 using IT_Project.Serializers;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace IT_Project.Controllers
 {
@@ -16,6 +17,7 @@ namespace IT_Project.Controllers
         {
             _doctors = doctors;
         }
+		[Authorize]
         [HttpPost("create")]
         public IActionResult CreateDoctor(string fullname, int specialization_id)
         {
@@ -30,7 +32,7 @@ namespace IT_Project.Controllers
                 SpecializationId = res.Value.SpecializationId
             });
         }
-
+		[Authorize]
         [HttpDelete("delete")]
         public IActionResult DeleteDoctor(int id)
         {

@@ -5,6 +5,11 @@ using Domain;
 using Database;
 using Database.Repository;
 using Microsoft.EntityFrameworkCore;
+using Domain.Logic.Interfaces;
+using Domain.UseCases;
+using IT_Project.Auth;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
     
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +33,24 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = AuthOptions.ISSUER,
+        ValidAudience = AuthOptions.AUDIENCE,
+        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey()
+    };
+    });
+
+
+
+
 
 var app = builder.Build();
 
@@ -39,6 +62,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseStaticFiles();
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages();
 if (app.Environment.IsDevelopment())

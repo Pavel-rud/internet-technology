@@ -15,5 +15,8 @@ namespace IT_Project.Serializers
         public string PhoneNumber { get; set; } = string.Empty;
         [JsonPropertyName("role")]
         public Role Role { get; set; }
+
+        [JsonPropertyName("token")]
+        public string Token { get; set; } = string.Empty;
     }
 }
