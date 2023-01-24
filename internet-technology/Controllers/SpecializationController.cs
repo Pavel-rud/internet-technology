@@ -3,6 +3,7 @@ using Domain.Logic.Interfaces;
 using Domain.Models;
 using Domain.UseCases;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace IT_Project.Controllers
 {
@@ -16,7 +17,7 @@ namespace IT_Project.Controllers
         {
             _specializations = specializationInteractor;
         }
-
+		[Authorize]
         [HttpPost("create")]
         public IActionResult CreateSpecialization(string name)
         {
@@ -28,7 +29,7 @@ namespace IT_Project.Controllers
                 return Ok(_specializations.GetByName(name));
             return Problem(statusCode: 400, detail: "Error while creating");
         }
-
+		[Authorize]
         [HttpDelete("delete")]
         public IActionResult DeleteSpecialization(int id)
         {

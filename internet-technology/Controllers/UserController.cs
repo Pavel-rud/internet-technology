@@ -3,6 +3,10 @@ using Domain.Models;
 using IT_Project.Serializers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Win32;
+using Domain.Models;
+using Domain.UseCases;
+using IT_Project.Auth;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HospitalProjectIT.Controllers
 {
@@ -15,7 +19,7 @@ namespace HospitalProjectIT.Controllers
         {
             _users = users;
         }
-
+		[Authorize]
         [HttpGet("getUserByLogin")]
         public ActionResult<UserSerializer> GetUserByLogin(string login)
         {
@@ -30,16 +34,16 @@ namespace HospitalProjectIT.Controllers
             {
                 Id = user.Value.Id,
                 username = user.Value.UserName,
-                PhoneNumber = user.Value.PhoneNumber,
+                Phone = user.Value.Phone,
                 Fullname = user.Value.Fullname,
                 Role = user.Value.Role,
             });
         }
 
         [HttpPost("register")]
-        public IActionResult RegisterUser(string username, string password, string phone_number, string fio, Role role)
+        public IActionResult RegisterUser(string username, string password, string phone, string fio, Role role)
         {
-            User user = new(0, phone_number, fio, username, password, role: role);
+            User user = new(0, phoner, fio, username, password, role: role);
             var register = _users.Register(user);
 
             if (register.isFailure)
@@ -48,9 +52,10 @@ namespace HospitalProjectIT.Controllers
             {
                 Id = register.Value.Id,
                 username = register.Value.UserName,
-                PhoneNumber = register.Value.PhoneNumber,
+                Phone = register.Value.Phone,
                 Fullname = register.Value.Fullname,
                 Role = register.Value.Role,
+				Token = TokenManager.GenerateToken(register.Value.UserName),
             });
         }
 
@@ -66,10 +71,31 @@ namespace HospitalProjectIT.Controllers
             {
                 Id = res.Value.Id,
                 username = res.Value.UserName,
-                PhoneNumber = res.Value.PhoneNumber,
+                Phone = res.Value.Phone,
                 Fullname = res.Value.Fullname,
                 Role = res.Value.Role,
             });
         }
+		[HttpGet("login")]
+         public IActionResult Login(string username, string password)
+         {
+             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+                 return BadRequest();
+             var result = _users.GetUserByLogin(username);
+             if (result.isFailure)
+                 return NotFound("Invalid login or password");
+             if (result.Value.Password != password)
+                 return Unauthorized("Invalid login or password");
+             return Ok(new UserSerializer
+             {
+                 Id = result.Value.Id,
+                 username = result.Value.UserName,
+                 Phone = result.Value.Phone,
+                 Fullname = result.Value.Fullname,
+                 Role = result.Value.Role,
+                 Token = TokenManager.GenerateToken(username),
+             });
+
+         }
     }
 }

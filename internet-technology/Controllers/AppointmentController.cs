@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Domain.UseCases;
 using Domain.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IT_Project.Controllers
 {
@@ -15,6 +17,7 @@ namespace IT_Project.Controllers
             _schedules = schedule;
             _appointments = appointment;
         }
+		[Authorize]
         [HttpPost("save")]
         public IActionResult SaveAppointment(int patientId,
             int doctorId,
