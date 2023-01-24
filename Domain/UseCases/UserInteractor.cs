@@ -31,11 +31,12 @@ namespace Domain.UseCases
             return _db.GetUserByLogin(login) ? Result.Ok(_db.GetUserByLogin(login)) : Result.Fail<User>("User not found");
         }
 
-        public Result IsUserExists(string login)
+        public Result<User> IsUserExists(string login)
         {
             if (string.IsNullOrEmpty(login))
-                return Result.Fail("Login error");
-            return _db.GetUserByLogin(login) ? Result.Ok() : Result.Fail("User not found");
+                return Result.Fail<User>("Login error");
+            var res = _db.GetUserByLogin(login);
+            return res != null ? Result.Ok(res) : Result.Fail<User>("User not found");
         }
     }
 }

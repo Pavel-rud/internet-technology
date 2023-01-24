@@ -1,4 +1,5 @@
 ﻿using Domain.UseCases;
+using Domain.Logic.Interfaces;
 
 namespace Tests
 {
